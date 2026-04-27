@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { HiMenu } from "react-icons/hi";
+import { RiMenuUnfold3Line, RiMenuUnfold4Line } from "react-icons/ri";
 import { FaAngleUp } from "react-icons/fa6";
 import { FaAngleDown } from "react-icons/fa6";
+import { useAppContext } from "../context/AppContext";
 
 const Navbar = () => {
+  const { sidebar, onClickSideBar } = useAppContext();
+
   const aimodal = [
     { name: "Neural Nexus", feature: "Quantum Core v3.8" },
     { name: "Cerebral Prime", feature: "Advanced Reasoning v2.1" },
@@ -17,12 +20,19 @@ const Navbar = () => {
   return (
     <div className="h-14 px-4 py-8 border-b border-[#E5E7EB] flex items-center bg-white">
       {/* LEFT */}
-      <div className="px-1">
-        <HiMenu size={22} className="cursor-pointer" />
+      <div
+        onClick={onClickSideBar}
+        className="px-1 py-1 cursor-pointer hover:bg-gray-100 transition-colors"
+      >
+        {sidebar ? (
+          <RiMenuUnfold3Line size={22} />
+        ) : (
+          <RiMenuUnfold4Line size={22} />
+        )}
       </div>
 
       {/* RIGHT - AI ENGINE */}
-      <div className="px-3 relative">
+      <div className="px-4 relative">
         <div
           onClick={() => setModelOpen(!modelOpen)}
           className="flex items-center gap-2 bg-[#f2f2f6] px-3 py-2 rounded cursor-pointer"
@@ -34,7 +44,7 @@ const Navbar = () => {
 
         {/* Custom DropDown! */}
         {modelOpen && (
-          <div className="absolute right-0 mt-2 w-62 bg-white rounded shadow-lg">
+          <div className="absolute right-0 mt-2 w-64 bg-white rounded shadow-lg">
             {aimodal.map((model, index) => (
               <div
                 key={index}

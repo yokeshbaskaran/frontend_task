@@ -1,5 +1,56 @@
 import { MdOutlineAttachFile } from "react-icons/md";
 import { LuSend } from "react-icons/lu";
+import { useState } from "react";
+import { useAppContext } from "../context/AppContext";
+
+export const ChatBox = () => {
+  const [userInput, setUserInput] = useState<string>("");
+  const { sendMessage } = useAppContext();
+
+  const handleSendmsg = () => {
+    if (!userInput.trim()) return;
+    sendMessage(userInput);
+    setUserInput("");
+    console.log("text is sent");
+  };
+
+  return (
+    <div className="px-5 flex flex-col items-center">
+      <div className="w-[85%] px-2 py-2 border border-[#9D9E9E] rounded-lg">
+        <div className="flex items-center">
+          <span>
+            <MdOutlineAttachFile size={20} />
+          </span>
+
+          <div className="w-full px-2 text-[#8C8D8E]">
+            <input
+              type="text"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              placeholder="Chat with me!"
+              className="w-full px-2 outline-0 text-black"
+            />
+          </div>
+
+          <button
+            onClick={handleSendmsg}
+            className="ml-auto p-2 bg-[#E5E7EB] rounded"
+          >
+            <LuSend color="#8C8D8E" size={18} />
+          </button>
+        </div>
+        <p className="pt-2 text-[#8C8D8E]">
+          Press Enter to send, Shift+Enter for new line
+        </p>
+      </div>
+
+      {/* Disclaimer  */}
+      <span className="my-2 text-sm">
+        AI can make mistakes. Consider checking important information.
+      </span>
+    </div>
+  );
+};
 
 export const ContentBox = () => {
   const instructions = [
@@ -35,40 +86,6 @@ export const ContentBox = () => {
           </div>
         ))}
       </section>
-    </div>
-  );
-};
-
-export const ChatBox = () => {
-  return (
-    <div className="px-5 flex flex-col items-center">
-      <div className="w-[85%] px-2 py-2 border border-[#9D9E9E] rounded-lg">
-        <div className="flex items-center">
-          <span>
-            <MdOutlineAttachFile size={20} />
-          </span>
-
-          <div className="w-full px-2 text-[#8C8D8E]">
-            <input
-              type="text"
-              placeholder="Chat with me!"
-              className="w-full px-2 outline-0 text-black"
-            />
-          </div>
-
-          <span className="ml-auto p-2 bg-[#E5E7EB] rounded">
-            <LuSend color="#8C8D8E" size={18} />
-          </span>
-        </div>
-        <p className="pt-2 text-[#8C8D8E]">
-          Press Enter to send, Shift+Enter for new line
-        </p>
-      </div>
-
-      {/* Disclaimer  */}
-      <span className="my-2 text-sm">
-        AI can make mistakes. Consider checking important information.
-      </span>
     </div>
   );
 };

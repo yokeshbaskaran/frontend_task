@@ -1,14 +1,18 @@
 import "./App.css";
 import { ChatBox, ContentBox } from "./components/HomeContent";
+import Modal from "./components/Modal";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import { useAppContext } from "./context/AppContext";
 
 const App = () => {
+  const { sidebar } = useAppContext();
+
   return (
     <>
       <div>
         <div className="flex h-screen bg-white">
-          <div className="w-64 hidden md:flex flex-col">
+          <div className={`w-64  ${sidebar ? "hidden" : "md:flex"} flex-col`}>
             <Sidebar />
           </div>
 
@@ -26,6 +30,7 @@ const App = () => {
           </div>
         </div>
       </div>
+      {/* <Modal /> */}
     </>
   );
 };

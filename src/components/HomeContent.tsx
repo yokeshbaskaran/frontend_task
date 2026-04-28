@@ -8,7 +8,7 @@ export const ChatBox = () => {
   const { sendMessage } = useAppContext();
 
   const handleSendmsg = () => {
-    if (!userInput.trim()) return;
+    if (userInput === "") return alert("Ask anything to chat!");
     sendMessage(userInput);
     setUserInput("");
     console.log("text is sent");
@@ -34,9 +34,9 @@ export const ChatBox = () => {
 
           <button
             onClick={handleSendmsg}
-            className="ml-auto p-2 bg-[#E5E7EB] rounded"
+            className={`ml-auto p-2 ${userInput ? "bg-[#29AF33]" : "bg-[#E5E7EB]"} rounded`}
           >
-            <LuSend color="#8C8D8E" size={18} />
+            <LuSend color={userInput ? "white" : "#8C8D8E"} size={18} />
           </button>
         </div>
         <p className="pt-2 text-[#8C8D8E]">

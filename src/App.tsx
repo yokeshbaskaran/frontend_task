@@ -1,8 +1,8 @@
 import "./App.css";
 import { ChatBox, ContentBox } from "./components/HomeContent";
-import Modal from "./components/Modal";
+// import Modal from "./components/Modal";
 import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./contents/NavContents/Sidebar";
 import { useAppContext } from "./context/AppContext";
 
 const App = () => {
@@ -19,7 +19,7 @@ const App = () => {
           <div className="flex-1 flex flex-col">
             <Navbar />
 
-            <div className="yoki w-full h-full flex flex-col justify-between items-center">
+            <div className="w-full h-full flex flex-col justify-between items-center">
               <div className="my-12">
                 <ContentBox />
               </div>

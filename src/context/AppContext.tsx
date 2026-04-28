@@ -5,12 +5,12 @@ type AppContextType = {
   onClickSideBar: () => void;
   userText: string;
   setUserText: React.Dispatch<React.SetStateAction<string>>;
-  createNewChat: () => void;
-  sendMessage: (text: string) => Promise<void>;
-  chats: NewChatType[];
-  activeChatID: number | null;
-  setActiveChatID: (id: number) => void;
-  loading: boolean;
+  // createNewChat: () => void;
+  // sendMessage: (text: string) => Promise<void>;
+  // chats: NewChatType[];
+  // activeChatID: number | null;
+  // setActiveChatID: (id: number) => void;
+  // loading: boolean;
 };
 
 type AppContextProps = {
@@ -40,28 +40,6 @@ export const AppContextProvider = ({ children }: AppContextProps) => {
 
   const onClickSideBar = () => setSidebar((prev) => !prev);
 
-  const [chats, setChats] = useState<NewChatType[]>(() => {
-    const stored = localStorage.getItem("chats");
-    return stored ? JSON.parse(stored) : [];
-  });
-
-  const [activeChatID, setActiveChatID] = useState<number | null>(null);
-
-  useEffect(() => {
-    localStorage.setItem("chats", JSON.stringify(chats));
-  }, [chats]);
-
-  const createNewChat = () => {
-    const newChat = {
-      id: Date.now(),
-      title: "New Chat",
-      messages: [],
-    };
-
-    setChats((prev) => [...prev, newChat]);
-    setActiveChatID(newChat.id);
-  };
-
   // API CALL (returns AI text)
   const query = async (text: string): Promise<string> => {
     try {
@@ -72,7 +50,7 @@ export const AppContextProvider = ({ children }: AppContextProps) => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_GEMINI_API_KEY}`,
+            Authorization: `Bearer ${import.meta.env.VITE_HF_API_KEY}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -82,55 +60,22 @@ export const AppContextProvider = ({ children }: AppContextProps) => {
         },
       );
 
-      const result = await response.json();
-      const data = result?.choices?.[0]?.message?.content;
-      console.log("data is here!", data);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API ERROR:", errorText);
+        return `Error: ${response.status}`;
+      }
 
-      return data || "No response from AI";
+      const result = await response.json();
+      console.log("result from ai", result);
+
+      return result?.choices?.[0]?.message?.content || "No response";
     } catch (error) {
       console.error(error);
       return "Error fetching response";
     } finally {
       setLoading(false);
     }
-  };
-
-  // MAIN CHAT FUNCTION
-  const sendMessage = async (text: string) => {
-    if (!activeChatID) return;
-
-    const userMsg: MessageType = {
-      id: Date.now(),
-      text,
-      sender: "user",
-    };
-
-    // add a user message first
-    setChats((prev) =>
-      prev.map((chat) =>
-        chat.id === activeChatID
-          ? { ...chat, messages: [...chat.messages, userMsg] }
-          : chat,
-      ),
-    );
-
-    // gets AI response
-    const aiText = await query(text);
-
-    const aiMsg: MessageType = {
-      id: Date.now() + 1,
-      text: aiText,
-      sender: "ai",
-    };
-
-    // adds the AI message
-    setChats((prev) =>
-      prev.map((chat) =>
-        chat.id === activeChatID
-          ? { ...chat, messages: [...chat.messages, aiMsg] }
-          : chat,
-      ),
-    );
   };
 
   return (
@@ -140,11 +85,11 @@ export const AppContextProvider = ({ children }: AppContextProps) => {
         onClickSideBar,
         userText,
         setUserText,
-        createNewChat,
-        sendMessage,
-        chats,
-        activeChatID,
-        setActiveChatID,
+        // createNewChat,
+        // sendMessage,
+        // chats,
+        // activeChatID,
+        // setActiveChatID,
         loading,
       }}
     >

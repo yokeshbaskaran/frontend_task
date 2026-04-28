@@ -2,11 +2,18 @@ import { IoCloseOutline } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
 import { TbDots } from "react-icons/tb";
 import ChatLists from "./ChatLists";
+import { useAppContext } from "../../context/AppContext";
 
 const Sidebar = () => {
+  const { newChatRef } = useAppContext();
+  const handleNewChat = () => {
+    newChatRef?.current?.focus();
+    // console.log("button clicked!");
+  };
+
   return (
     <>
-      <section className="fixed top-0 left-0 h-screen w-64 bg-[#F8F9FA] border-r flex flex-col border-[#EEF0F2]">
+      <section className="fixed top-0 left-0 h-screen w-64 bg-[#F8F9FA] border-2 flex flex-col border-[#EEF0F2]">
         <div className="w-full px-2 py-3">
           {/* Logo */}
           <div className="flex justify-between items-center">
@@ -19,7 +26,10 @@ const Sidebar = () => {
           </div>
 
           {/* New Chat */}
-          <div className="my-4 px-1 py-1 border bg-[#00A832] text-white hover:opacity-90 rounded flex items-center cursor-pointer">
+          <div
+            onClick={handleNewChat}
+            className="my-4 px-1 py-1 border bg-[#00A832] text-white hover:opacity-90 rounded flex items-center cursor-pointer"
+          >
             <span className="px-1 py-2">
               <IoMdAdd size={20} />
             </span>

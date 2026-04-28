@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { useAppContext } from "../context/AppContext";
 
 type ChatProps = {
   id: number;
   title: string;
+  updatedAt: number;
   onDelete: (id: number) => void;
   onEdit: (id: number, newTitle: string) => void;
 };
 
-const Chat = ({ id, title, onDelete, onEdit }: ChatProps) => {
+const Chat = ({ id, title, updatedAt, onDelete, onEdit }: ChatProps) => {
   const [chatText, setChatText] = useState(title);
   const [isEdit, setIsEdit] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { formatTime } = useAppContext();
 
   useEffect(() => {
     if (isEdit) {
@@ -50,10 +54,14 @@ const Chat = ({ id, title, onDelete, onEdit }: ChatProps) => {
               onChange={(e) => setChatText(e.target.value)}
             />
           ) : (
-            <p>{chatText}</p>
+            <p>
+              {chatText.length > 10 ? chatText.slice(0, 15) + "..." : chatText}
+            </p>
           )}
 
-          <span className="px-1 text-sm text-gray-500">today</span>
+          <span className="px-0 text-sm text-gray-500">
+            {formatTime(updatedAt)}
+          </span>
         </div>
 
         <div className="group-hover:flex hidden items-center gap-3">

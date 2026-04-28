@@ -1,22 +1,36 @@
 import { MdOutlineAttachFile } from "react-icons/md";
 import { LuSend } from "react-icons/lu";
-import { useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useAppContext } from "../../context/AppContext";
 
 export const ChatBox = () => {
-  const [userInput, setUserInput] = useState<string>("");
-  const { sendMessage } = useAppContext();
+  const {
+    userText,
+    setUserText,
+    sendMessage,
+    createNewChat,
+    loading,
+    activeChatID,
+    newChatRef,
+  } = useAppContext();
 
   const handleSendmsg = () => {
-    if (userInput === "") return alert("Ask anything to chat!");
-    sendMessage(userInput);
-    setUserInput("");
-    console.log("text is sent");
+    if (!userText.trim()) return alert("Ask anything to chat!");
+
+    //  AUTO CREATE CHAT (IMPORTANT)
+    if (!activeChatID) {
+      createNewChat();
+      setTimeout(() => sendMessage(userText), 100);
+    } else {
+      sendMessage(userText);
+      setUserText("");
+    }
   };
 
   return (
     <div className="px-5 flex flex-col items-center">
-      <div className="w-[85%] px-2 py-2 border border-[#9D9E9E] rounded-lg">
+      <div
+        className={`w-[85%] px-2 py-2 border  ${userText ? "border-[#29AF33] shadow-md" : "border-[#9D9E9E]"} rounded-lg`}
+      >
         <div className="flex items-center">
           <span>
             <MdOutlineAttachFile size={20} />
@@ -25,8 +39,9 @@ export const ChatBox = () => {
           <div className="w-full px-2 text-[#8C8D8E]">
             <input
               type="text"
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
+              ref={newChatRef}
+              value={userText}
+              onChange={(e) => setUserText(e.target.value)}
               placeholder="Chat with me!"
               className="w-full px-2 outline-0 text-black"
             />
@@ -34,9 +49,10 @@ export const ChatBox = () => {
 
           <button
             onClick={handleSendmsg}
-            className={`ml-auto p-2 ${userInput ? "bg-[#29AF33]" : "bg-[#E5E7EB]"} rounded`}
+            disabled={loading}
+            className={`ml-auto p-2 ${userText ? "bg-[#29AF33]" : "bg-[#E5E7EB]"} rounded`}
           >
-            <LuSend color={userInput ? "white" : "#8C8D8E"} size={18} />
+            <LuSend color={userText ? "white" : "#8C8D8E"} size={18} />
           </button>
         </div>
         <p className="pt-2 text-[#8C8D8E]">
@@ -61,7 +77,7 @@ export const ContentBox = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="my-10 flex flex-col items-center">
       <div className="px-2">
         <img src="/icon.png" alt="logo" width={120} height={120} />
       </div>

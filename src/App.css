@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .yoki {
   @apply border border-red-500;
 }
